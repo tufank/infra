@@ -1,0 +1,24 @@
+#cloud-config
+# vim: syntax=yaml
+debug: True
+disable_root: True
+# chpasswd:
+#   list: |
+#     root:password
+#   expire: False
+
+ssh_pwauth: false
+ssh_deletekeys: False
+users:
+  - name: ${ssh_user}
+    uid: 2021
+    sudo: ALL=(ALL) NOPASSWD:ALL
+    groups: users
+    home: /home/${ssh_user}
+    shell: /bin/bash
+    lock_passwd: true
+    ssh_authorized_keys: ${jsonencode(ssh_authorized_keys)}
+
+timezone: var.timezone
+
+fqdn: ${fqdn}
