@@ -1,7 +1,6 @@
+- name: Flush handlers
+  meta: flush_handlers
+
 - name: Install required k8s packages
   ansible.builtin.package:
-    name:
-      - "{{ k8s_container_runtime.package }}"
-      - kubeadm
-      - kubelet
-      - kubectl
+    name: "{{ k8s_packages }}"

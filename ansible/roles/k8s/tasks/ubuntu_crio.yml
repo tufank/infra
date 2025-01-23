@@ -17,7 +17,4 @@
     src: ubuntu_crio_source.j2
     dest: /etc/apt/sources.list.d/crio.list
     mode: "0755"
-
-- name: Update apt cache
-  ansible.builtin.apt:
-    update-cache: true
+  notify: Update apt cache

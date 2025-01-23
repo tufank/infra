@@ -1,0 +1,3 @@
+- name: Pin package versions
+  ansible.builtin.command: apt-mark hold {{ k8s_packages | join(" ") }}
+  changed_when: false

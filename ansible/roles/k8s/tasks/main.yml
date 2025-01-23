@@ -9,3 +9,6 @@
 
 - name: Install k8s packages
   ansible.builtin.include_tasks: install_packages.yml
+
+- name: Pin versions
+  ansible.builtin.include_tasks: "{{ os_distro }}_pin.yml"

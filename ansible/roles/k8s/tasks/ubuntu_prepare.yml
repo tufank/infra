@@ -3,7 +3,7 @@
     upgrade: dist
     update_cache: true
 
-- name: check if reboot is needed
+- name: Check if reboot is needed
   ansible.builtin.stat:
     path: /var/run/reboot-required
   register: check_reboot
@@ -55,3 +55,4 @@
     src: ubuntu_k8s_source.j2
     dest: /etc/apt/sources.list.d/kubernetes.list
     mode: "0755"
+  notify: Update apt cache
