@@ -26,7 +26,7 @@
 
 - name: Dearmor repo key
   ansible.builtin.shell:
-    cmd: cat "{{ k8s_download_cache_dir }}/k8s_release.key" | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    cmd: set -o pipefail && cat "{{ k8s_download_cache_dir }}/k8s_release.key" | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
   changed_when: false
   args:
     creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
