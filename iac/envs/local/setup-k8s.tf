@@ -19,7 +19,7 @@ resource "local_file" "etcd_hosts_cfg" {
       ssh_private_key_file = var.ssh_private_key_file
     }
   )
-  filename = "../../../ansible/envs/local/terraform-hosts-odoo"
+  filename = "../../../ansible/envs/local/terraform-hosts-k8s"
 }
 
 output "etcd_nodes" {
