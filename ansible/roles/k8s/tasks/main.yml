@@ -1,8 +1,5 @@
 - name: Configure OS
   ansible.builtin.include_tasks: common_os_configuration.yml
 
-- name: Set OS facts
-  ansible.builtin.include_tasks: set_facts.yml
-
 - name: Add kubernetes repo
-  ansible.builtin.include_tasks: prepare_{{ distro }}.yml
+  ansible.builtin.include_tasks: prepare_{{ os_distro }}.yml

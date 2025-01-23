@@ -1,3 +1,0 @@
-- name: Set distro fact
-  ansible.builtin.set_fact:
-    distro: "{{ ansible_distribution | lower }}"

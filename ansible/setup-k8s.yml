@@ -5,6 +5,9 @@
     - k8s_etcd
 
   tasks:
+    - name: Set OS facts
+      ansible.builtin.include_role:
+        name: os
     - name: Include k8s prepare
       ansible.builtin.include_role:
         name: k8s
