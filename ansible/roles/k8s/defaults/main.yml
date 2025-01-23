@@ -1,2 +1,6 @@
+k8s_version: "1.32"
+k8s_container_runtime: crio
+k8s_crio_version: "1.30"
+
 k8s_sysctl_settings:
   net.ipv4.ip_forward: 1

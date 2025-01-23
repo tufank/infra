@@ -2,4 +2,7 @@
   ansible.builtin.include_tasks: common_os_configuration.yml
 
 - name: Add kubernetes repo
-  ansible.builtin.include_tasks: prepare_{{ os_distro }}.yml
+  ansible.builtin.include_tasks: "{{ os_distro }}_prepare.yml"
+
+- name: Install crio
+  ansible.builtin.include_tasks: "{{ os_distro }}_{{ k8s_container_runtime }}.yml"

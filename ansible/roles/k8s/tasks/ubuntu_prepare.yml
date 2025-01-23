@@ -20,13 +20,20 @@
 
 - name: Download repo key
   ansible.builtin.get_url:
-    url: https://pkgs.k8s.io/core:/stable:/v1.32/deb/Release.key
+    url: https://pkgs.k8s.io/core:/stable:/v{{ k8s_version }}/deb/Release.key
     dest: "{{ os_download_cache_dir }}/k8s_release.key"
     mode: "0440"
 
 - name: Dearmor repo key
   ansible.builtin.shell:
     cmd: set -o pipefail && cat "{{ os_download_cache_dir }}/k8s_release.key" | gpg --dearmor -o /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+    executable: /bin/bash
   changed_when: false
   args:
     creates: /etc/apt/keyrings/kubernetes-apt-keyring.gpg
+
+- name: Add k8s repo
+  ansible.builtin.template:
+    src: ubuntu_k8s_source.j2
+    dest: /etc/apt/sources.list.d/kubernetes.list
+    mode: "0755"

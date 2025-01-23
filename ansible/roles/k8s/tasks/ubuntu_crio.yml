@@ -1,0 +1,19 @@
+- name: Download crio repo key
+  ansible.builtin.get_url:
+    url: https://pkgs.k8s.io/addons:/cri-o:/stable:/v{{ k8s_crio_version }}/deb/Release.key
+    dest: "{{ os_download_cache_dir }}/k8s_crio_release.key"
+    mode: "0440"
+
+- name: Dearmor crio repo key
+  ansible.builtin.shell:
+    cmd: set -o pipefail && cat "{{ os_download_cache_dir }}/k8s_crio_release.key" | gpg --dearmor -o /etc/apt/keyrings/crio-apt-keyring.gpg
+    executable: /bin/bash
+  changed_when: false
+  args:
+    creates: /etc/apt/keyrings/crio-apt-keyring.gpg
+
+- name: Add cri-o repo
+  ansible.builtin.template:
+    src: ubuntu_crio_source.j2
+    dest: /etc/apt/sources.list.d/crio.list
+    mode: "0755"
