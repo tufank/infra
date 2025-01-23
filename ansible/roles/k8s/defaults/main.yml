@@ -1,0 +1,4 @@
+k8s_download_cache_dir: /var/cache/download
+
+k8s_sysctl_settings:
+  net.ipv4.ip_forward: 1
