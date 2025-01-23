@@ -1,8 +1,0 @@
-k8s_version: "1.32"
-k8s_container_runtime:
-  name: crio
-  version: "1.30"
-  package: cri-o
-
-k8s_sysctl_settings:
-  net.ipv4.ip_forward: 1

@@ -1,2 +1,15 @@
-k8s_kubernetes_version: "1.32"
-k8s_crio_version: "1.30"
+k8s_version: "1.32"
+k8s_container_runtime:
+  name: crio
+  version: "1.30"
+  package: cri-o
+  endpoint: "unix:///var/run/crio/crio.sock"
+
+k8s_sysctl_settings:
+  net.ipv4.ip_forward: 1
+
+k8s_packages:
+  - "{{ k8s_container_runtime.package }}"
+  - kubeadm
+  - kubelet
+  - kubectl
