@@ -1,6 +1,6 @@
 - name: Download crio repo key
   ansible.builtin.get_url:
-    url: https://pkgs.k8s.io/addons:/cri-o:/stable:/v{{ k8s_crio_version }}/deb/Release.key
+    url: https://pkgs.k8s.io/addons:/cri-o:/stable:/v{{ k8s_container_runtime.version }}/deb/Release.key
     dest: "{{ os_download_cache_dir }}/k8s_crio_release.key"
     mode: "0440"
 
@@ -17,3 +17,7 @@
     src: ubuntu_crio_source.j2
     dest: /etc/apt/sources.list.d/crio.list
     mode: "0755"
+
+- name: Update apt cache
+  ansible.builtin.apt:
+    update-cache: true

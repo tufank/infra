@@ -9,3 +9,8 @@
     sysctl_set: true
     state: present
   loop: "{{ k8s_sysctl_settings | dict2items }}"
+
+- name: Modprobe br_netfilter
+  community.general.modprobe:
+    name: br_netfilter
+    state: present

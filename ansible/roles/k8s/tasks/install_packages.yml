@@ -1,0 +1,7 @@
+- name: Install required k8s packages
+  ansible.builtin.package:
+    name:
+      - "{{ k8s_container_runtime.package }}"
+      - kubeadm
+      - kubelet
+      - kubectl
