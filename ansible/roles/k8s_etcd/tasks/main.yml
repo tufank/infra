@@ -1,0 +1,2 @@
+- name: Configure kubelet
+  ansible.builtin.include_tasks: kubelet.yml

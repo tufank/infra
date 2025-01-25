@@ -1,0 +1,27 @@
+- name: Ensure kubelet systemd directory
+  ansible.builtin.file:
+    name: "{{ k8s_etcd_systemd_kubelet }}"
+    state: directory
+    mode: "0755"
+
+- name: Add etcd systemd service manager
+  ansible.builtin.template:
+    src: etcd-service-manager.conf.j2
+    dest: "{{ k8s_etcd_systemd_kubelet }}/etcd-service-manager.conf"
+    mode: "0644"
+  notify: Restart kubelet
+
+- name: Add kubelet configuration for etcd
+  ansible.builtin.template:
+    src: kubelet.conf.j2
+    dest: "{{ k8s_etcd_systemd_kubelet }}/kubelet.conf"
+    mode: "0644"
+  notify: Restart kubelet
+
+- name: Flush handlers
+  ansible.builtin.meta: flush_handlers
+
+- name: Ensure kubelet running
+  ansible.builtin.systemd:
+    name: kubelet
+    state: started
