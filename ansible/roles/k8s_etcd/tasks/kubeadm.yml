@@ -1,0 +1,5 @@
+- name: Add kubelet configuration for etcd
+  ansible.builtin.template:
+    src: kubeadmcfg.yaml.j2
+    dest: "/tmp/kubeadmcfg.yaml"
+    mode: "0644"

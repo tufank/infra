@@ -1,0 +1,37 @@
+{% set my_host = ansible_hostname %}
+{% set my_ip = hostvars[my_host]['ansible_default_ipv4']['address'] %}
+{% set initial_cluster = [] %}
+{% for name in groups['k8s_etcd'] %}
+{% set _ = initial_cluster.append(name ~ "=https://" ~ hostvars[name]["ansible_default_ipv4"]["address"] ~ ":2380") %}
+{% endfor %}
+{% set initial_cluster = initial_cluster | join(",") %}
+apiVersion: "kubeadm.k8s.io/v1beta4"
+kind: InitConfiguration
+nodeRegistration:
+  name: "{{ my_host }}"
+localAPIEndpoint:
+  advertiseAddress: "{{ my_ip }}"
+---
+apiVersion: "kubeadm.k8s.io/v1beta4"
+kind: ClusterConfiguration
+etcd:
+  local:
+    serverCertSANs:
+      - "{{ my_ip }}"
+    peerCertSANs:
+      - "{{ my_ip }}"
+    extraArgs:
+      - name: initial-cluster
+        value: "{{ initial_cluster }}"
+      - name: initial-cluster-state
+        value: new
+      - name: name
+        value: "{{ my_host }}"
+      - name: listen-peer-urls
+        value: https://{{ my_ip }}:2380
+      - name: listen-client-urls
+        value: https://{{ my_ip }}:2379
+      - name: advertise-client-urls
+        value: https://{{ my_ip }}:2379
+      - name: initial-advertise-peer-urls
+        value: https://{{ my_ip }}:2380

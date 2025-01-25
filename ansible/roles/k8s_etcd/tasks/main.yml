@@ -1,2 +1,5 @@
 - name: Configure kubelet
   ansible.builtin.include_tasks: kubelet.yml
+
+- name: Configure kubeadm
+  ansible.builtin.include_tasks: kubeadm.yml
