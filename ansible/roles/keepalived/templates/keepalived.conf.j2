@@ -1,0 +1,44 @@
+{% set interface = ansible_default_ipv4.interface %}
+{% if ansible_hostname == groups['k8s_lb'][0] %}
+{% set vi_1_state = "MASTER" %}
+{% set vi_2_state = "BACKUP" %}
+{% set vi_1_prio = "200" %}
+{% set vi_2_prio = "100" %}
+{% else %}
+{% set vi_1_state = "BACKUP" %}
+{% set vi_2_state = "MASTER" %}
+{% set vi_1_prio = "100" %}
+{% set vi_2_prio = "200" %}
+{% endif %}
+global_defs {
+  vrrp_skip_check_adv_addr
+}
+vrrp_instance VI_1 {
+        state {{ vi_1_state }}
+        interface {{ interface }}
+        virtual_router_id 254
+        priority {{ vi_1_prio }}
+        advert_int 1
+        authentication {
+              auth_type PASS
+              auth_pass {{ keepalived.auth_pass }}
+        }
+        virtual_ipaddress {
+              "{{ keepalived.primary_virtual_ipaddress }}"
+        }
+}
+
+vrrp_instance VI_2 {
+        state {{ vi_2_state }}
+        interface {{ interface }}
+        virtual_router_id 253
+        priority {{ vi_2_prio }}
+        advert_int 1
+        authentication {
+              auth_type PASS
+              auth_pass {{ keepalived.auth_pass }}
+        }
+        virtual_ipaddress {
+              "{{ keepalived.secondary_virtual_ipaddress }}"
+        }
+}

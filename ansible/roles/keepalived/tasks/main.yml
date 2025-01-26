@@ -1,3 +1,9 @@
 - name: Install keepalived package
   ansible.builtin.package:
     name: keepalived
+
+- name: Copy keepalived.conf
+  ansible.builtin.template:
+    src: keepalived.conf.j2
+    dest: "{{ keepalived_conf_file }}"
+  notify: Restart keepalived
