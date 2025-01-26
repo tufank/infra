@@ -36,7 +36,7 @@ module "terraform-libvirt-k8s_cp" {
 
 
 # generate inventory file for Ansible
-resource "local_file" "etcd_hosts_cfg" {
+resource "local_file" "k8s_hosts_cfg" {
   content = templatefile("${path.module}/ansible_hosts_k8s.tpl",
     {
       etcd_nodes           = module.terraform-libvirt-etcd.node_names_and_ips
