@@ -100,3 +100,24 @@ variable "k8s_lb_memory" {
 variable "k8s_lb_lmi" {
   type = string
 }
+
+
+# k8s_cp
+variable "k8s_cp_node_names" {
+  type    = set(string)
+  default = []
+}
+
+variable "k8s_cp_vcpu" {
+  type    = number
+  default = 2
+}
+
+variable "k8s_cp_memory" {
+  type    = number
+  default = 2048
+}
+
+variable "k8s_cp_lmi" {
+  type = string
+}
