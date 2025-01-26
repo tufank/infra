@@ -3,3 +3,29 @@
     src: kubeadmcfg.yaml.j2
     dest: "/tmp/kubeadmcfg.yaml"
     mode: "0644"
+
+- name: Create server certificate for etcd
+  ansible.builtin.command: kubeadm init phase certs etcd-server --config=/tmp/kubeadmcfg.yaml
+  args:
+    creates: "{{ k8s_etcd_pki_dir }}/server.key"
+
+- name: Create peer certificate for etcd
+  ansible.builtin.command: kubeadm init phase certs etcd-peer --config=/tmp/kubeadmcfg.yaml
+  args:
+    creates: "{{ k8s_etcd_pki_dir }}/peer.key"
+
+- name: Create healtcheck-client certificate for etcd
+  ansible.builtin.command: kubeadm init phase certs etcd-healthcheck-client --config=/tmp/kubeadmcfg.yaml
+  args:
+    creates: "{{ k8s_etcd_pki_dir }}/healthcheck-client.key"
+
+# This is under k8s_pki_dir, not under k8s_etcd_pki_dir
+- name: Create apiserver-etcd-client certificates for etcd
+  ansible.builtin.command: kubeadm init phase certs apiserver-etcd-client --config=/tmp/kubeadmcfg.yaml
+  args:
+    creates: "{{ k8s_pki_dir }}/apiserver-etcd-client.key"
+
+- name: Create static pod manifest for etcd
+  ansible.builtin.command: kubeadm init phase etcd local --config=/tmp/kubeadmcfg.yaml
+  args:
+    creates: "{{ k8s_static_pod_manifest_dir }}/etcd.yaml"

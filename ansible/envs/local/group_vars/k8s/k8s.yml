@@ -13,3 +13,5 @@ k8s_packages:
   - kubeadm
   - kubelet
   - kubectl
+
+k8s_static_pod_manifest_dir: /etc/kubernetes/manifests
