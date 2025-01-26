@@ -1,5 +1,5 @@
 module "terraform-libvirt-etcd" {
-  source              = "../../modules/terraform-libvirt-etcd"
+  source              = "../../modules/terraform-libvirt-cluster"
   node_names          = var.etcd_node_names
   vcpu                = var.etcd_vcpu
   memory              = var.etcd_memory
