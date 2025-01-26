@@ -2,10 +2,7 @@
   ansible.builtin.include_tasks: common_os_configuration.yml
 
 - name: Add kubernetes repo
-  ansible.builtin.include_tasks: "{{ os_distro }}_repo.yml"
-
-- name: Install k8s packages
-  ansible.builtin.include_tasks: install_k8s_packages.yml
+  ansible.builtin.include_tasks: "{{ os_distro }}_k8s.yml"
 
 - name: Pin versions
   ansible.builtin.include_tasks: "{{ os_distro }}_pin.yml"

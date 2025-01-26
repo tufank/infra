@@ -23,4 +23,9 @@
     src: ubuntu_k8s_source.j2
     dest: /etc/apt/sources.list.d/kubernetes.list
     mode: "0755"
-  notify: Update apt cache
+
+- name: Install required k8s packages
+  ansible.builtin.apt:
+    name: "{{ k8s_packages }}"
+    state: present
+    update_cache: true

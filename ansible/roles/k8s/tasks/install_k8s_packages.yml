@@ -1,7 +1,0 @@
-- name: Flush handlers
-  ansible.builtin.meta: flush_handlers
-
-- name: Install required k8s packages
-  ansible.builtin.package:
-    name: "{{ k8s_packages }}"
-    state: present
