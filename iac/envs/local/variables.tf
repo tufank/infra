@@ -79,3 +79,24 @@ variable "etcd_memory" {
 variable "etcd_lmi" {
   type = string
 }
+
+
+# k8s_lb
+variable "k8s_lb_node_names" {
+  type    = set(string)
+  default = []
+}
+
+variable "k8s_lb_vcpu" {
+  type    = number
+  default = 1
+}
+
+variable "k8s_lb_memory" {
+  type    = number
+  default = 1024
+}
+
+variable "k8s_lb_lmi" {
+  type = string
+}
