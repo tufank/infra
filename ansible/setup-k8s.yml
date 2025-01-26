@@ -20,3 +20,19 @@
     - name: Deploy etcd
       ansible.builtin.include_role:
         name: k8s_etcd
+
+- name: Run k8s_lb deployment tasks
+  become: true
+  gather_facts: true
+  hosts:
+    - k8s_lb
+  tasks:
+    - name: Set OS facts
+      ansible.builtin.include_role:
+        name: os
+    - name: Deploy keepalived
+      ansible.builtin.include_role:
+        name: keepalived
+    - name: Deploy haproxy
+      ansible.builtin.include_role:
+        name: haproxy
