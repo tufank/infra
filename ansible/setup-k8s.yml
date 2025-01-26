@@ -1,9 +1,8 @@
-- name: Run k8s pre-installation tasks
+- name: Run k8s installation tasks
   become: true
   gather_facts: true
   hosts:
-    - k8s_etcd
-
+    - k8s
   tasks:
     - name: Set OS facts
       ansible.builtin.include_role:
@@ -11,3 +10,13 @@
     - name: Include k8s prepare
       ansible.builtin.include_role:
         name: k8s
+
+- name: Run k8s_etcd deployment tasks
+  become: true
+  gather_facts: true
+  hosts:
+    - k8s_etcd
+  tasks:
+    - name: Deploy etcd
+      ansible.builtin.include_role:
+        name: k8s_etcd
