@@ -6,8 +6,8 @@
 
 - name: Copy root CA crt to OS trust dir
   ansible.builtin.copy:
-    dest: "/usr/local/share/ca-certificates/{{ k8s_root_ca_name }}.crt"
-    content: "{{ k8s_root_ca_crt }}"
+    dest: "/usr/local/share/ca-certificates/{{ root_ca_name }}.crt"
+    content: "{{ root_ca_crt }}"
     mode: "0644"
 
 - name: Update OS trust store
