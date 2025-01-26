@@ -1,3 +1,6 @@
+sysctl_settings:
+  net.ipv4.ip_nonlocal_bind: 1
+
 keepalived:
   primary_virtual_ipaddress: 192.168.122.254
   secondary_virtual_ipaddress: 192.168.122.253
@@ -8,3 +11,10 @@ keepalived:
     63343230323262623330396539626634316262343861353239656666383136323234623565663831
     6636363466646166310a336336633034636633653834393430613831336331643762613563303366
     31383334326362636237633031323632653937303336383239393833353864616365
+
+haproxy:
+  bind_ips:
+    - "{{ keepalived.primary_virtual_ipaddress }}"
+    - "{{ keepalived.secondary_virtual_ipaddress }}"
+
+k8s_apiserver_port: 6443
