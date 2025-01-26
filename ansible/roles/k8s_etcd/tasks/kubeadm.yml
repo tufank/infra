@@ -29,4 +29,16 @@
   ansible.builtin.command: kubeadm init phase etcd local --config=/tmp/kubeadmcfg.yaml
   args:
     creates: "{{ k8s_static_pod_manifest_dir }}/etcd.yaml"
-  notify: Restart kubelet
+
+- name: Wait for etcd service to become healty
+  ansible.builtin.command: |
+    etcdctl \
+    --cert /etc/kubernetes/pki/etcd/peer.crt \
+    --key /etc/kubernetes/pki/etcd/peer.key \
+    --cacert /etc/kubernetes/pki/etcd/ca.crt \
+    --endpoints https://{{ hostvars[ansible_hostname]['ansible_default_ipv4']['address'] }}:2379 endpoint health
+  retries: 300
+  delay: 10
+  register: result
+  until: result.stderr is search("is healthy")
+  changed_when: false

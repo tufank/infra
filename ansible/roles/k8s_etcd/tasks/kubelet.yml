@@ -9,14 +9,18 @@
     src: etcd-service-manager.conf.j2
     dest: "{{ k8s_etcd_systemd_kubelet }}/etcd-service-manager.conf"
     mode: "0644"
-  notify: Daemon reload
+  notify:
+    - Daemon reload
+    - Restart kubelet
 
 - name: Add kubelet configuration for etcd
   ansible.builtin.template:
     src: kubelet.conf.j2
     dest: "{{ k8s_etcd_systemd_kubelet }}/kubelet.conf"
     mode: "0644"
-  notify: Daemon reload
+  notify:
+    - Daemon reload
+    - Restart kubelet
 
 - name: Flush handlers
   ansible.builtin.meta: flush_handlers
