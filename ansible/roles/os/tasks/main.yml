@@ -9,3 +9,6 @@
 
 - name: Add root cert to trust store of the OS
   ansible.builtin.include_tasks: "{{ os_distro }}_truststore.yml"
+
+- name: Add kubernetes repo
+  ansible.builtin.include_tasks: "{{ os_distro }}_prepare.yml"

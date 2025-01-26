@@ -18,3 +18,14 @@
     dest: /etc/apt/sources.list.d/crio.list
     mode: "0755"
   notify: Update apt cache
+
+- name: Install package cri-o
+  ansible.builtin.package:
+    name: "{{ k8s_container_runtime.package }}"
+    state: present
+
+- name: Enable and start cri-o service
+  ansible.builtin.systemd:
+    name: crio
+    state: started
+    daemon_reload: yes

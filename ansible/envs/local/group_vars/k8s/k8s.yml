@@ -9,7 +9,6 @@ k8s_sysctl_settings:
   net.ipv4.ip_forward: 1
 
 k8s_packages:
-  - "{{ k8s_container_runtime.package }}"
   - kubeadm
   - kubelet
   - kubectl

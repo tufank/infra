@@ -1,1 +1,7 @@
 os_default_download_chache_dir: /var/cache/download
+os_required_packages:
+  - apt-transport-https
+  - ca-certificates
+  - curl
+  - gpg
+  - net-tools

@@ -1,38 +1,6 @@
-- name: OS upgrade
-  ansible.builtin.apt:
-    upgrade: dist
-    update_cache: true
-
-- name: Check if reboot is needed
-  ansible.builtin.stat:
-    path: /var/run/reboot-required
-  register: check_reboot
-
-- name: Reboot if needed
-  ansible.builtin.reboot:
-    msg: "Rebooting due to /var/run/reboot-required"
-    post_reboot_delay: 10
-    reboot_timeout: 600
-  when: check_reboot.stat.exists
-
-- name: Install required OS packages
-  ansible.builtin.apt:
-    update_cache: true
-    name:
-      - apt-transport-https
-      - ca-certificates
-      - curl
-      - gpg
-
 - name: Ensure keyrings directory
   ansible.builtin.file:
     name: /etc/apt/keyrings
-    state: directory
-    mode: "0755"
-
-- name: Ensure download cache directory
-  ansible.builtin.file:
-    name: "{{ os_download_cache_dir }}"
     state: directory
     mode: "0755"
 

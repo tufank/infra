@@ -29,3 +29,4 @@
   ansible.builtin.command: kubeadm init phase etcd local --config=/tmp/kubeadmcfg.yaml
   args:
     creates: "{{ k8s_static_pod_manifest_dir }}/etcd.yaml"
+  notify: Restart kubelet
