@@ -25,3 +25,8 @@
   ansible.builtin.systemd:
     name: kubelet
     state: started
+
+- name: Install etcd-client
+  ansible.builtin.package:
+    name: etcd-client
+    state: present
