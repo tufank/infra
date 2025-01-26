@@ -1,0 +1,17 @@
+- name: Ensure kubelet systemd directory
+  ansible.builtin.file:
+    name: "{{ k8s_etcd_pki_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Copy root CA crt to etcd pki dir
+  ansible.builtin.copy:
+    dest: "{{ k8s_etcd_ca_crt_file }}"
+    content: "{{ k8s_root_ca_crt }}"
+    mode: "0644"
+
+- name: Copy root CA key to etcd pki dir
+  ansible.builtin.copy:
+    dest: "{{ k8s_etcd_ca_key_file }}"
+    content: "{{ k8s_root_ca_key }}"
+    mode: "0600"

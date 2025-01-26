@@ -1,1 +1,4 @@
 k8s_etcd_systemd_kubelet: /etc/systemd/system/kubelet.service.d/
+k8s_etcd_pki_dir: /etc/kubernetes/pki/etcd/
+k8s_etcd_ca_crt_file: "{{ k8s_etcd_pki_dir }}/ca.crt"
+k8s_etcd_ca_key_file: "{{ k8s_etcd_pki_dir }}/ca.key"
