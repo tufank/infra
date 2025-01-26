@@ -15,3 +15,4 @@ ${hostname} ansible_host=${ip} ansible_port=22 ansible_user='${ssh_user}' ansibl
 
 [k8s:children]
 k8s_etcd
+k8s_cp
