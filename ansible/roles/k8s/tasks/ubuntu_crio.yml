@@ -29,4 +29,3 @@
   ansible.builtin.systemd:
     name: crio
     state: started
-    daemon_reload: yes
