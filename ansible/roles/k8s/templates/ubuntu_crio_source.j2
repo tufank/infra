@@ -1,1 +1,1 @@
-deb [signed-by=/etc/apt/keyrings/crio-apt-keyring.gpg] https://pkgs.k8s.io/addons:/cri-o:/stable:/v{{ k8s_crio_version }}/deb/ /
+deb [signed-by=/etc/apt/keyrings/{{ k8s_container_runtime.name }}-apt-keyring.gpg] https://pkgs.k8s.io/addons:/{{ k8s_container_runtime.package }}:/stable:/v{{ k8s_container_runtime.version }}/deb/ /
