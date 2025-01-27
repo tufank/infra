@@ -1,4 +1,11 @@
 k8s_pki_dir: /etc/kubernetes/pki
+k8s_ca_crt_file: "{{ k8s_pki_dir }}/ca.crt"
+k8s_ca_key_file: "{{ k8s_pki_dir }}/ca.key"
+
+k8s_etcd_pki_dir: "{{ k8s_pki_dir }}/etcd"
+k8s_etcd_ca_crt_file: "{{ k8s_etcd_pki_dir }}/ca.crt"
+k8s_etcd_ca_key_file: "{{ k8s_etcd_pki_dir }}/ca.key"
+
 k8s_root_ca_name: tuftuf.org Intermediate CA1 2024
 k8s_root_ca_crt: |
   -----BEGIN CERTIFICATE-----

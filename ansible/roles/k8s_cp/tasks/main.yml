@@ -1,0 +1,8 @@
+- name: Copy certs from etcd node
+  ansible.builtin.include_tasks: etcd_certs.yml
+
+- name: Copy root ca and key
+  ansible.builtin.include_tasks: root_ca.yml
+
+- name: Initialize first control plane node
+  ansible.builtin.include_tasks: kubeadm_init.yml

@@ -1,0 +1,15 @@
+- name: Copy kubadm-conf
+  ansible.builtin.template:
+    src: kubeadm-conf.yaml.j2
+    dest: /tmp/kubeadm-conf.yaml
+    mode: "0644"
+
+- name: Kubeadm init
+  ansible.builtin.command: kubeadm init --config /tmp/kubeadm-conf.yaml --upload-certs
+  register: kubeadm_init_output
+  run_once: true
+  delegate_to: "{{ groups['k8s_cp'][0] }}"
+
+- name: Show output
+  ansible.builtin.debug:
+    msg: "{{ kubeadm_init_output }}"

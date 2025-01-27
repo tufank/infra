@@ -1,0 +1,37 @@
+- name: Read apiserver-etcd-client.crt from first etcd node
+  slurp:
+    src: "{{ k8s_pki_dir }}/apiserver-etcd-client.crt"
+  register: apiserver_etcd_client_crt
+  run_once: true
+  delegate_to: "{{ groups['k8s_etcd'][0] }}"
+
+- name: Read apiserver-etcd-client.key from first etcd node
+  slurp:
+    src: "{{ k8s_pki_dir }}/apiserver-etcd-client.key"
+  register: apiserver_etcd_client_key
+  run_once: true
+  delegate_to: "{{ groups['k8s_etcd'][0] }}"
+
+- name: Ensure etcd pki directory
+  ansible.builtin.file:
+    name: "{{ k8s_etcd_pki_dir }}"
+    state: directory
+    mode: "0755"
+
+- name: Copy etcd root CA crt to etcd pki dir
+  ansible.builtin.copy:
+    dest: "{{ k8s_etcd_ca_crt_file }}"
+    content: "{{ k8s_root_ca_crt }}"
+    mode: "0644"
+
+- name: Copy apiserver-etcd-client.crt
+  ansible.builtin.copy:
+    dest: "{{ k8s_pki_dir }}/apiserver-etcd-client.crt"
+    content: "{{ apiserver_etcd_client_crt.content | b64decode }}"
+    mode: "0644"
+
+- name: Copy apiserver-etcd-client.key
+  ansible.builtin.copy:
+    dest: "{{ k8s_pki_dir }}/apiserver-etcd-client.key"
+    content: "{{ apiserver_etcd_client_key.content | b64decode }}"
+    mode: "0600"
