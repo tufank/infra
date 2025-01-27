@@ -4,7 +4,7 @@
   hosts:
     - k8s
   tasks:
-    - name: Set OS facts
+    - name: Common OS operations
       ansible.builtin.include_role:
         name: os
     - name: Include k8s prepare
@@ -27,7 +27,7 @@
   hosts:
     - k8s_lb
   tasks:
-    - name: Set OS facts
+    - name: Common OS operations
       ansible.builtin.include_role:
         name: os
     - name: Deploy keepalived
@@ -36,3 +36,13 @@
     - name: Deploy haproxy
       ansible.builtin.include_role:
         name: haproxy
+
+- name: Run k8s_cp deployment tasks
+  become: true
+  gather_facts: true
+  hosts:
+    - k8s_cp
+  tasks:
+    - name: Deploy control plane
+      ansible.builtin.include_role:
+        name: k8s_cp
