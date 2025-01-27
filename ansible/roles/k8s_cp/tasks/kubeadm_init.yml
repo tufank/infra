@@ -3,13 +3,16 @@
     src: kubeadm-conf.yaml.j2
     dest: /tmp/kubeadm-conf.yaml
     mode: "0644"
+  when: ansible_hostname == groups['k8s_cp'][0]
 
 - name: Kubeadm init
   ansible.builtin.command: kubeadm init --config /tmp/kubeadm-conf.yaml --upload-certs
   register: kubeadm_init_output
   run_once: true
-  delegate_to: "{{ groups['k8s_cp'][0] }}"
+  when: ansible_hostname == groups['k8s_cp'][0]
 
 - name: Show output
   ansible.builtin.debug:
     msg: "{{ kubeadm_init_output }}"
+    run_once: true
+  when: ansible_hostname == groups['k8s_cp'][0]
