@@ -1,0 +1,10 @@
+- name: Check if already joined (worker)
+  stat:
+    path: /etc/kubernetes/kubelet.conf
+  register: k8s_kubelet_conf
+  when: not k8s_join_control_plane
+
+- name: Joined already (worker)
+  set_fact:
+    joined_already: "{% if k8s_kubelet_conf.stat.exists %}{{ true }}{% else %}{{ false }}{% endif %}"
+  when: not k8s_join_control_plane

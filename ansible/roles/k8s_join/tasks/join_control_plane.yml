@@ -1,0 +1,27 @@
+- name: Control plane - check if already joined
+  stat:
+    path: /etc/kubernetes/admin.conf
+  register: k8s_admin_conf
+  when: k8s_join_control_plane
+
+- name: Control plane - set joined already
+  set_fact:
+    joined_already: "{% if k8s_admin_conf.stat.exists %}{{ true }}{% else %}{{ false }}{% endif %}"
+  when: k8s_join_control_plane
+
+- name: Control plane - get certificate key from first node
+  ansible.builtin.command:
+    cmd: kubeadm init phase upload-certs --upload-certs --config "{{ k8s_kubeadm_conf }}"
+  register: k8s_join_cert_key_output
+  delegate_to: "{{ groups['k8s_cp'][0] }}"
+  when: k8s_join_control_plane and not joined_already
+
+- name: Control plane - set certificate key
+  set_fact:
+    k8s_join_cp_cert_key: "{{ k8s_join_cert_key_output.stdout_lines[-1] }}"
+  when: k8s_join_control_plane and not joined_already
+
+- name: Control plane - add certificate key to print command
+  set_fact:
+    k8s_join_print_command: "{{ k8s_join_print_command }} --certificate-key {{ k8s_join_cp_cert_key }}"
+  when: k8s_join_control_plane and not joined_already
