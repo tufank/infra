@@ -6,3 +6,6 @@
 
 - name: Initialize first control plane node
   ansible.builtin.include_tasks: kubeadm_init.yml
+
+- name: Install CNI
+  ansible.builtin.include_tasks: install_{{ k8s_cni.name }}.yml

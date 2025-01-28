@@ -38,7 +38,7 @@
     --cacert /etc/kubernetes/pki/etcd/ca.crt \
     --endpoints https://{{ hostvars[ansible_hostname]['ansible_default_ipv4']['address'] }}:2379 endpoint health
   retries: 300
-  delay: 10
+  delay: 5
   register: result
   until: result.stderr is search("is healthy")
   changed_when: false

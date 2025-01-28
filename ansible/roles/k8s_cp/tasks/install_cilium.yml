@@ -1,0 +1,29 @@
+- name: Check if cilium installed
+  ansible.builtin.shell:
+    cmd: KUBECONFIG=/etc/kubernetes/admin.conf kubectl -n kube-system get ds cilium || true
+  register: cilium_check
+  when: ansible_hostname == groups['k8s_cp'][0]
+
+- name: Set cilium installed fact
+  ansible.builtin.set_fact:
+    cilium_installed: "{% if 'NotFound' in cilium_check.stderr %}{{ false }}{% else %}{{ true }}{% endif %}"
+  when: ansible_hostname == groups['k8s_cp'][0]
+
+- name: Download cilium
+  ansible.builtin.get_url:
+    url: https://github.com/cilium/cilium-cli/releases/download/{{ k8s_cni.cli_version }}/cilium-linux-{{ k8s_cni.cli_arch }}.tar.gz
+    dest: "{{ os_download_cache_dir }}/cilium.tar.gz"
+    mode: "0440"
+  when: ansible_hostname == groups['k8s_cp'][0] and not cilium_installed
+
+- name: Unarchive cilium
+  ansible.builtin.unarchive:
+    src: "{{ os_download_cache_dir }}/cilium.tar.gz"
+    dest: /usr/local/bin
+    remote_src: true
+  when: ansible_hostname == groups['k8s_cp'][0] and not cilium_installed
+
+- name: Install cilium
+  ansible.builtin.shell:
+    cmd: KUBECONFIG=/etc/kubernetes/admin.conf cilium install --version {{ k8s_cni.version }}
+  when: ansible_hostname == groups['k8s_cp'][0] and not cilium_installed

@@ -17,3 +17,9 @@ k8s_static_pod_manifest_dir: /etc/kubernetes/manifests
 
 kube_apiserver: "kube-apiserver.dev.tuftuf.org"
 kube_apiserver_port: "6443"
+
+k8s_cni:
+  name: cilium
+  version: 1.16.6
+  cli_version: v0.16.23
+  cli_arch: amd64

@@ -4,7 +4,7 @@
 
 - name: Set distro fact
   ansible.builtin.set_fact:
-    os_download_cache_dir: "{{ os_default_download_chache_dir }}"
+    os_download_cache_dir: "{{ os_default_download_cache_dir }}"
   when: os_download_cache_dir is undefined
 
 - name: Add root cert to trust store of the OS
