@@ -15,7 +15,8 @@
   register: kubeadm_init_output
   when: not k8s_admin_conf.stat.exists
 
-- name: Show output
+- name: Save kubeadm output
   ansible.builtin.copy:
     content: "{{ kubeadm_init_output }}"
     dest: ~/kubeadm_init.output
+  when: not k8s_admin_conf.stat.exists
