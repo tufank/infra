@@ -1,7 +1,11 @@
 - name: OS upgrade
   ansible.builtin.apt:
-    upgrade: dist
     update_cache: true
+
+- name: OS upgrade
+  ansible.builtin.apt:
+    upgrade: dist
+  when: os_upgrade
 
 - name: Check if reboot is needed
   ansible.builtin.stat:

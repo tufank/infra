@@ -5,3 +5,5 @@ os_required_packages:
   - curl
   - gpg
   - net-tools
+
+os_upgrade: false
