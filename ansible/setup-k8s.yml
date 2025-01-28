@@ -3,6 +3,13 @@
   gather_facts: true
   hosts:
     - k8s
+    - k8s_lb
+  tasks: []
+
+- name: Run k8s installation tasks
+  become: true
+  hosts:
+    - k8s
   tasks:
     - name: Common OS operations
       ansible.builtin.include_role:
@@ -12,7 +19,6 @@
         name: k8s_common
 - name: Run k8s_etcd deployment tasks
   become: true
-  gather_facts: true
   hosts:
     - k8s_etcd
   tasks:
@@ -22,7 +28,6 @@
 
 - name: Run k8s_lb deployment tasks
   become: true
-  gather_facts: true
   hosts:
     - k8s_lb
   tasks:
@@ -38,7 +43,6 @@
 
 - name: Run k8s_cp init tasks
   become: true
-  gather_facts: true
   hosts:
     - k8s_cp[0]
   tasks:
@@ -48,7 +52,6 @@
 
 - name: Run k8s_cp join tasks
   become: true
-  gather_facts: true
   serial: 1
   hosts:
     - k8s_cp[1:]
@@ -61,7 +64,6 @@
 
 - name: Run k8s_worker join tasks
   become: true
-  gather_facts: true
   hosts:
     - k8s_worker
   tasks:
