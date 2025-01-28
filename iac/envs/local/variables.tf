@@ -121,3 +121,23 @@ variable "k8s_cp_memory" {
 variable "k8s_cp_lmi" {
   type = string
 }
+
+# k8s_cp
+variable "k8s_worker_node_names" {
+  type    = set(string)
+  default = []
+}
+
+variable "k8s_worker_vcpu" {
+  type    = number
+  default = 4
+}
+
+variable "k8s_worker_memory" {
+  type    = number
+  default = 4096
+}
+
+variable "k8s_worker_lmi" {
+  type = string
+}

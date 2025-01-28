@@ -34,6 +34,17 @@ module "terraform-libvirt-k8s_cp" {
   ssh_authorized_keys = var.ssh_authorized_keys
 }
 
+module "terraform-libvirt-k8s_worker" {
+  source              = "../../modules/terraform-libvirt-cluster"
+  node_names          = var.k8s_worker_node_names
+  vcpu                = var.k8s_worker_vcpu
+  memory              = var.k8s_worker_memory
+  lmi                 = var.k8s_worker_lmi
+  ssh_user            = var.ssh_user
+  domain_name         = var.domain_name
+  timezone            = var.timezone
+  ssh_authorized_keys = var.ssh_authorized_keys
+}
 
 # generate inventory file for Ansible
 resource "local_file" "k8s_hosts_cfg" {
@@ -42,6 +53,7 @@ resource "local_file" "k8s_hosts_cfg" {
       etcd_nodes           = module.terraform-libvirt-etcd.node_names_and_ips
       k8s_lb_nodes         = module.terraform-libvirt-k8s_lb.node_names_and_ips
       k8s_cp_nodes         = module.terraform-libvirt-k8s_cp.node_names_and_ips
+      k8s_worker_nodes     = module.terraform-libvirt-k8s_worker.node_names_and_ips
       ssh_user             = var.ssh_user
       ssh_private_key_file = var.ssh_private_key_file
     }
@@ -54,5 +66,6 @@ output "k8s_nodes" {
     module.terraform-libvirt-etcd.node_names_and_ips,
     module.terraform-libvirt-k8s_lb.node_names_and_ips,
     module.terraform-libvirt-k8s_cp.node_names_and_ips,
+    module.terraform-libvirt-k8s_worker.node_names_and_ips,
   ]
 }
