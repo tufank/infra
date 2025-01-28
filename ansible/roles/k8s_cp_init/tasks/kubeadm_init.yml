@@ -11,7 +11,7 @@
   when: not k8s_admin_conf.stat.exists
 
 - name: Kubeadm init
-  ansible.builtin.command: kubeadm init --config /tmp/kubeadm-conf.yaml --upload-certs
+  ansible.builtin.command: kubeadm init --upload-certs --config "{{ k8s_kubeadm_conf }}"
   register: kubeadm_init_output
   when: not k8s_admin_conf.stat.exists
 
