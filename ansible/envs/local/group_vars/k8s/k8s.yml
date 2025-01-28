@@ -23,3 +23,5 @@ k8s_cni:
   version: 1.16.6
   cli_version: v0.16.23
   cli_arch: amd64
+
+k8s_kubeadm_conf: /etc/kubeadm-conf.yaml
