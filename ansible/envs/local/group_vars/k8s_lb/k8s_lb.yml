@@ -2,8 +2,9 @@ sysctl_settings:
   net.ipv4.ip_nonlocal_bind: 1
 
 keepalived:
-  primary_virtual_ipaddress: 192.168.122.254
-  secondary_virtual_ipaddress: 192.168.122.253
+  virtual_ips:
+    - 192.168.122.254
+    - 192.168.122.253
   auth_pass: !vault |
     $ANSIBLE_VAULT;1.1;AES256
     30363133373830333631623639366333323639613863613532666632613139366338363731626664
@@ -13,8 +14,6 @@ keepalived:
     31383334326362636237633031323632653937303336383239393833353864616365
 
 haproxy:
-  bind_ips:
-    - "{{ keepalived.primary_virtual_ipaddress }}"
-    - "{{ keepalived.secondary_virtual_ipaddress }}"
+  bind_ips: "{{ keepalived.virtual_ips }}"
 
 k8s_apiserver_port: 6443
