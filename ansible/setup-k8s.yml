@@ -7,10 +7,9 @@
     - name: Common OS operations
       ansible.builtin.include_role:
         name: os
-    - name: Include k8s prepare
+    - name: Include k8s common
       ansible.builtin.include_role:
-        name: k8s
-
+        name: k8s_common
 - name: Run k8s_etcd deployment tasks
   become: true
   gather_facts: true
@@ -37,12 +36,35 @@
       ansible.builtin.include_role:
         name: haproxy
 
-- name: Run k8s_cp deployment tasks
+- name: Run k8s_cp init tasks
   become: true
   gather_facts: true
   hosts:
-    - k8s_cp
+    - k8s_cp[0]
   tasks:
     - name: Deploy control plane
       ansible.builtin.include_role:
-        name: k8s_cp
+        name: k8s_cp_init
+
+- name: Run k8s_cp join tasks
+  become: true
+  gather_facts: true
+  serial: 1
+  hosts:
+    - k8s_cp[1:]
+  vars:
+    k8s_join_control_plane: true
+  tasks:
+    - name: Join control plane
+      ansible.builtin.include_role:
+        name: k8s_join
+
+- name: Run k8s_worker join tasks
+  become: true
+  gather_facts: true
+  hosts:
+    - k8s_worker
+  tasks:
+    - name: Deploy worker nodes
+      ansible.builtin.include_role:
+        name: k8s_join
