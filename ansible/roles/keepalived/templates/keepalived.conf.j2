@@ -1,6 +1,15 @@
 global_defs {
   vrrp_skip_check_adv_addr
 }
+
+vrrp_script health_check {
+  script "{{ keepalived.health_check_script }}"
+  interval 3
+  weight -2
+  fall 10
+  rise 2
+}
+
 {% set interface = ansible_default_ipv4.interface %}
 
 {% for host in groups[node_group_name] %}

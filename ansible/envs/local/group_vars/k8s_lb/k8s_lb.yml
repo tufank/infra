@@ -12,6 +12,16 @@ keepalived:
     63343230323262623330396539626634316262343861353239656666383136323234623565663831
     6636363466646166310a336336633034636633653834393430613831336331643762613563303366
     31383334326362636237633031323632653937303336383239393833353864616365
+  health_check_script: /etc/keepalived/check_apiserver.sh
+  health_check_script_content: |
+    #!/bin/sh
+
+    errorExit() {
+        echo "*** $*" 1>&2
+        exit 1
+    }
+
+    curl -sfk --max-time 2 https://localhost:{{ k8s_apiserver_port }}/healthz -o /dev/null || errorExit "Error GET https://localhost:{{ k8s_apiserver_port }}/healthz"
 
 haproxy:
   bind_ips: "{{ keepalived.virtual_ips }}"

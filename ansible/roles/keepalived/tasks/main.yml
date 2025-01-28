@@ -2,6 +2,12 @@
   ansible.builtin.package:
     name: keepalived
 
+- name: Copy health_check_script
+  ansible.builtin.copy:
+    dest: "{{ keepalived.health_check_script }}"
+    content: "{{ keepalived.health_check_script }}"
+    mode: "0755"
+
 - name: Copy keepalived.conf
   ansible.builtin.template:
     src: keepalived.conf.j2
