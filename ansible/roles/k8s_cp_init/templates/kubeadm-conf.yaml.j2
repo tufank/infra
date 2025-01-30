@@ -12,3 +12,13 @@ etcd:
     caFile: /etc/kubernetes/pki/etcd/ca.crt
     certFile: /etc/kubernetes/pki/apiserver-etcd-client.crt
     keyFile: /etc/kubernetes/pki/apiserver-etcd-client.key
+controllerManager:
+  extraArgs:
+    - name: cluster-cidr
+      value: "{{ k8s_cluster_cidr }}"
+{% if k8s_cni.name == "calico" %}
+    - name: allocate-node-cidrs
+      value:  "false"
+networking:
+  podSubnet: "{{ k8s_cluster_cidr }}"
+{% endif %}
