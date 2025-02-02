@@ -1,29 +1,65 @@
+- name: Check if calico installed
+  ansible.builtin.shell:
+    cmd: KUBECONFIG=/etc/kubernetes/admin.conf kubectl -n calico-system get ds calico-node || true
+  register: calico_check
+
+- name: Set cilium installed fact
+  ansible.builtin.set_fact:
+    calico_installed: "{{ false if 'NotFound' in calico_check.stderr else true }}"
+
 - name: Download calico operator yaml
   ansible.builtin.get_url:
     url: https://raw.githubusercontent.com/projectcalico/calico/v{{ k8s_cni.version }}/manifests/tigera-operator.yaml
     dest: "{{ os_download_cache_dir }}/tigera-operator-v{{ k8s_cni.version }}.yaml"
     mode: "0440"
+  when: not calico_installed
 
-- name: Download calico custom resources
-  ansible.builtin.get_url:
-    url: https://raw.githubusercontent.com/projectcalico/calico/v{{ k8s_cni.version }}/manifests/custom-resources.yaml
-    dest: "{{ os_download_cache_dir }}/tigera-calico-custom-resources-v{{ k8s_cni.version }}.yaml"
-    mode: "0440"
+- name: Copy calico custom-resources
+  ansible.builtin.template:
+    src: calico-custom-resources.yaml.j2
+    dest: "{{ os_download_cache_dir }}/calico-custom-resources-v{{ k8s_cni.version }}.yaml"
+    mode: "0644"
+  when: not calico_installed
 
-- name: Replace cidr in custom resources
-  ansible.builtin.command:
-    cmd: "sed -Ei 's@(.*)cidr(.*)@\\1cidr: {{ k8s_cluster_cidr }}@g' '{{ os_download_cache_dir }}/tigera-calico-custom-resources-v{{ k8s_cni.version }}.yaml'"
+- name: Copy calico apiserver config map
+  ansible.builtin.template:
+    src: calico-config-map-apiserver.yaml.j2
+    dest: "{{ os_download_cache_dir }}/calico-config-map-apiserver-v{{ k8s_cni.version }}.yaml"
+    mode: "0644"
+  when: not calico_installed
 
-- name: Install calico operator
+- name: Create calico operator
   ansible.builtin.shell:
     cmd: KUBECONFIG=/etc/kubernetes/admin.conf kubectl create -f {{ os_download_cache_dir }}/tigera-operator-v{{ k8s_cni.version }}.yaml
+  when: not calico_installed
 
-- name: Install calico custom resources
+- name: Add DNS server to tigera-operator
   ansible.builtin.shell:
-    cmd: KUBECONFIG=/etc/kubernetes/admin.conf kubectl create -f {{ os_download_cache_dir }}/tigera-calico-custom-resources-v{{ k8s_cni.version }}.yaml
+    cmd: KUBECONFIG=/etc/kubernetes/admin.conf kubectl patch deployment -n tigera-operator tigera-operator -p '{{ tigera_operator_dns | to_json }}'
+  when: not calico_installed
+
+- name: Apply calico apiserver config map
+  ansible.builtin.shell:
+    cmd: KUBECONFIG=/etc/kubernetes/admin.conf kubectl create -f {{ os_download_cache_dir }}/calico-config-map-apiserver-v{{ k8s_cni.version }}.yaml
+  when: not calico_installed
+
+- name: Create calico custom resources
+  ansible.builtin.shell:
+    cmd: KUBECONFIG=/etc/kubernetes/admin.conf kubectl create -f {{ os_download_cache_dir }}/calico-custom-resources-v{{ k8s_cni.version }}.yaml
+  when: not calico_installed
 
 - name: Download calicoctl
   ansible.builtin.get_url:
     url: https://github.com/projectcalico/calico/releases/download/v{{ k8s_cni.cli_version }}/calicoctl-linux-amd64
     dest: /usr/local/bin/calicoctl
     mode: "0755"
+  when: not calico_installed
+
+- name: Wait for calico
+  ansible.builtin.shell:
+    cmd: KUBECONFIG=/etc/kubernetes/admin.conf kubectl -n calico-system get ds calico-node
+  retries: 300
+  delay: 5
+  register: result
+  until: result.stderr is not search("NotFound")
+  changed_when: false
