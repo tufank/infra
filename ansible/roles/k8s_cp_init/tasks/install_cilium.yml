@@ -5,7 +5,7 @@
 
 - name: Set cilium installed fact
   ansible.builtin.set_fact:
-    cilium_installed: "{% if 'NotFound' in cilium_check.stderr %}{{ false }}{% else %}{{ true }}{% endif %}"
+    cilium_installed: "{{ false if 'NotFound' in cilium_check.stderr else true }}"
 
 - name: Download cilium
   ansible.builtin.get_url:
